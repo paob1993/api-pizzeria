@@ -1,5 +1,6 @@
 package com.paob.pizzeria.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrdenItemEntity {
+public class OrderItemEntity {
 
     @Id
     @Column(name = "id_order", nullable = false)
@@ -32,6 +33,7 @@ public class OrdenItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_order", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private OrderEntity order;
 
     @OneToOne
