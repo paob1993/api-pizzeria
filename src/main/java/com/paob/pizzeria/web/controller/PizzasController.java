@@ -3,6 +3,7 @@ package com.paob.pizzeria.web.controller;
 import com.paob.pizzeria.persistence.entity.PizzaEntity;
 import com.paob.pizzeria.services.PizzasService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +20,41 @@ public class PizzasController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PizzaEntity>> getAll() {
-        return ResponseEntity.ok(this.pizzasService.getAll());
+    public ResponseEntity<Page<PizzaEntity>> getAll(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "8") int elements) {
+        return ResponseEntity.ok(this.pizzasService.getAll(page, elements));
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<Page<PizzaEntity>> getAvailable(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "8") int elements,
+                                                          @RequestParam(defaultValue = "price") String sortBy,
+                                                          @RequestParam(defaultValue = "ASC") String sortDirection) {
+        return ResponseEntity.ok(this.pizzasService.getAvailable(page, elements, sortBy, sortDirection));
+    }
+
+    @GetMapping("/with/{ingredient}")
+    public ResponseEntity<List<PizzaEntity>> getWith(@PathVariable String ingredient) {
+        return ResponseEntity.ok(this.pizzasService.getWith(ingredient));
+    }
+
+    @GetMapping("/without/{ingredient}")
+    public ResponseEntity<List<PizzaEntity>> getWithout(@PathVariable String ingredient) {
+        return ResponseEntity.ok(this.pizzasService.getWithout(ingredient));
+    }
+
+    @GetMapping("/cheapest/{price}")
+    public ResponseEntity<List<PizzaEntity>> getCheapestPizzas(@PathVariable double price) {
+        return ResponseEntity.ok(this.pizzasService.getCheapest(price));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PizzaEntity> get(@PathVariable int id) {
         return ResponseEntity.ok(this.pizzasService.get(id));
+    }
+    @GetMapping("/name/{name}")
+    public ResponseEntity<PizzaEntity> getByName(@PathVariable String name) {
+        return ResponseEntity.ok(this.pizzasService.getByName(name));
     }
 
     @PostMapping
