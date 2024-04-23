@@ -2,6 +2,7 @@ package com.paob.pizzeria.web.controller;
 
 import com.paob.pizzeria.persistence.entity.PizzaEntity;
 import com.paob.pizzeria.services.PizzasService;
+import com.paob.pizzeria.services.dto.UpdatePizzaPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +71,16 @@ public class PizzasController {
     public ResponseEntity<PizzaEntity> update(@RequestBody PizzaEntity pizza) {
         if (pizza.getId() != null && this.pizzasService.exists(pizza.getId())) {
             return ResponseEntity.ok(this.pizzasService.save(pizza));
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PutMapping("/price")
+    public ResponseEntity<Void> updatePrice(@RequestBody UpdatePizzaPriceDto dto) {
+        if (this.pizzasService.exists(dto.getId())) {
+            this.pizzasService.updatePrice(dto);
+            return ResponseEntity.ok().build();
         }
 
         return ResponseEntity.badRequest().build();

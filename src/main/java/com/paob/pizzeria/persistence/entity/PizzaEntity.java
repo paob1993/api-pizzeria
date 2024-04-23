@@ -1,16 +1,23 @@
 package com.paob.pizzeria.persistence.entity;
 
+import com.paob.pizzeria.persistence.audit.AuditPizzaListener;
+import com.paob.pizzeria.persistence.audit.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.io.Serializable;
+
 
 @Entity
 @Table(name = "pizzas")
+@EntityListeners({AuditingEntityListener.class, AuditPizzaListener.class})
 @Getter
 @Setter
 @NoArgsConstructor
-public class PizzaEntity {
+public class PizzaEntity extends AuditableEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -34,4 +41,16 @@ public class PizzaEntity {
     @Column(columnDefinition = "TINYINT", nullable = false)
     private Boolean available;
 
+    @Override
+    public String toString() {
+        return "PizzaEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", vegetarian=" + vegetarian +
+                ", vegan=" + vegan +
+                ", available=" + available +
+                '}';
+    }
 }
